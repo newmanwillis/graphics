@@ -41,9 +41,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
       halfAngle.normalize();
       float rv = halfAngle * i.N;  // (r.at(0.0) - r.at(i.t));
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) * max(pow(rv, shininess(i)), 0.0);    
-      // result += pLight->distanceAttenuation(r.at(i.t)) * (diffuse + specular);
-      result += (diffuse + specular);
-      
+      result += pLight->distanceAttenuation(r.at(i.t)) * (diffuse + specular);
     }
 
     // Ambient Light
