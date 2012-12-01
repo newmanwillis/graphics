@@ -36,7 +36,6 @@ Vec3d RayTracer::trace( double x, double y )
 	scene->intersectCache.clear();
 
     ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
-
     scene->getCamera().rayThrough( x,y,r );
 	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
 	ret.clamp();
@@ -48,23 +47,19 @@ Vec3d RayTracer::trace( double x, double y )
 Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
 	isect i;
-
+	
+	
 	if( scene->intersect( r, i ) ) {
-		// YOUR CODE HERE
+	  const Material& m = i.getMaterial();
 
-		// An intersection occured!  We've got work to do.  For now,
-		// this code gets the material for the surface that was intersected,
-		// and asks that material to provide a color for the ray.  
-
-		// This is a great place to insert code for recursive ray tracing.
-		// Instead of just returning the result of shade(), add some
-		// more steps: add in the contributions from reflected and refracted
-		// rays.
-
-		const Material& m = i.getMaterial();
-
-		return m.shade(scene, r, i);
-
+	  if(depth == traceUI->getDepth())
+	    return m.shade(scene, r, i);
+	  
+	  Vec3d position = r.at(i.t);
+	  Vec3d direction = 2*((-1)*r.getDirection()*i.N)* i.N + r.getDirection();
+	  ray reflection = ray(position, direction);
+	  return m.shade(scene, r, i) + traceRay(reflection, thresh, depth+1);
+	  // return m.shade(scene, r, i);
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
