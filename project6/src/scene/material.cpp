@@ -28,19 +28,24 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
     if( debugMode )
       std::cout << "Debugging Phong code..." << std::endl;
 
-    Vec3d result = Vec3d(0, 0, 0);
-    for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
+    Vec3d result = Vec3d(0, 0, 0);  // initializer to phong model result
+    for (vector<Light*>::const_iterator litr = scene->beginLights(); 
 	  litr != scene->endLights(); ++litr ) {
+
       Light* pLight = *litr;
 
       // Diffuse Light
-      Vec3d diffuse = prod(kd(i), pLight->getColor(r.at(i.t))) * max(pLight->getDirection(r.at(i.t)) * i.N, 0.0);
+      Vec3d diffuse = prod(kd(i), pLight->getColor(r.at(i.t))) *
+                          max(pLight->getDirection(r.at(i.t)) * i.N, 0.0);
 
       // Specular Light
       Vec3d halfAngle = pLight->getDirection(r.at(i.t)) + (r.at(0.0) - r.at(i.t));
       halfAngle.normalize();
-      float rv = halfAngle * i.N;  // (r.at(0.0) - r.at(i.t));
-      Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) * max(pow(rv, shininess(i)), 0.0);    
+      float rv = halfAngle * i.N;
+      Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
+                                   max(pow(rv, shininess(i)), 0.0);
+
+     // Placing distance term into Phong model
       result += pLight->distanceAttenuation(r.at(i.t)) * (diffuse + specular);
     }
 

@@ -47,19 +47,18 @@ Vec3d RayTracer::trace( double x, double y )
 Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
 	isect i;
-	
-	
-	if( scene->intersect( r, i ) ) {
+
+	if (scene->intersect( r, i )) {
 	  const Material& m = i.getMaterial();
 
-	  if(depth == traceUI->getDepth())
+	  if (depth == traceUI->getDepth())
 	    return m.shade(scene, r, i);
 	  
 	  Vec3d position = r.at(i.t);
-	  Vec3d direction = 2*((-1)*r.getDirection()*i.N)* i.N + r.getDirection();
+	  Vec3d direction = 2 * ((-1) * r.getDirection() * i.N) * i.N + r.getDirection();
 	  ray reflection = ray(position, direction);
-	  return m.shade(scene, r, i) + traceRay(reflection, thresh, depth+1);
-	  // return m.shade(scene, r, i);
+          // recurses the reflection based on depth specified by user
+	  return m.shade(scene, r, i) + traceRay(reflection, thresh, depth + 1);
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
