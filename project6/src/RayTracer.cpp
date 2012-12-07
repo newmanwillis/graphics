@@ -46,19 +46,37 @@ Vec3d RayTracer::trace( double x, double y )
 // (or places called from here) to handle reflection, refraction, etc etc.
 Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
+  
 	isect i;
 
 	if (scene->intersect( r, i )) {
 	  const Material& m = i.getMaterial();
 
 	  if (depth == traceUI->getDepth())
-	    return m.shade(scene, r, i);
+	    return m.shade(scene, r, i)+ m.ke(i);
 	  
+	  cout<< "emmissive: " << m.ke(i) << " ambient: " << m.ka(i) << " spec: " << m.ks(i) << " reflect: " <<m.kr(i) << " transmissive: " << m.kt(i) << endl;
 	  Vec3d position = r.at(i.t);
 	  Vec3d direction = 2 * ((-1) * r.getDirection() * i.N) * i.N + r.getDirection();
-	  ray reflection = ray(position, direction);
-          // recurses the reflection based on depth specified by user
-	  return m.shade(scene, r, i) + traceRay(reflection, thresh, depth + 1);
+	  ray reflection = ray(position, direction, ray::REFLECTION);
+
+	  //transmission 
+	  double index = 1/(m.index(i));
+	  Vec3d n = i.N;
+	  n.normalize();
+	  Vec3d v = (-1) * r.getDirection();
+	  v.normalize();
+	  if(depth%2 == 1){
+	    n = (-1) * n;
+	    index = 1/index;
+	  }
+
+	  float cosi = n * v;
+	  float cost = sqrt(1-pow(index, 2.0)*(1-pow(cosi, 2.0)));
+	  Vec3d t = (index * cosi - cost) * n - index * v;
+	  ray transmission = ray(position, t, ray::REFRACTION);
+
+	  return m.shade(scene, r, i) + m.ke(i) + m.kr(i)*traceRay(reflection, thresh, depth + 1)+prod(m.kt(i), traceRay(transmission, thresh, depth+1));
 	
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
