@@ -46,48 +46,43 @@ Vec3d RayTracer::trace( double x, double y )
 // (or places called from here) to handle reflection, refraction, etc etc.
 Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
-  
 	isect i;
-
 	if (scene->intersect( r, i )) {
 	  const Material& m = i.getMaterial();
 
 	  if (depth == traceUI->getDepth())
 	    return m.shade(scene, r, i)+ m.ke(i);
 	  
-	  cout<< "emmissive: " << m.ke(i) << " ambient: " << m.ka(i) << " spec: " << m.ks(i) << " reflect: " <<m.kr(i) << " transmissive: " << m.kt(i) << endl;
-	  Vec3d position = r.at(i.t);
-	  Vec3d direction = 2 * ((-1) * r.getDirection() * i.N) * i.N + r.getDirection();
-	  ray reflection = ray(position, direction, ray::REFLECTION);
-
-	  //transmission 
-	  double index = 1/(m.index(i));
+	  Vec3d intersection_pos = r.at(i.t);
+	  Vec3d v = (-1) * r.getDirection();
 	  Vec3d n = i.N;
 	  n.normalize();
-	  Vec3d v = (-1) * r.getDirection();
 	  v.normalize();
+
+	  Vec3d reflection_direction = 2 * (v * n) * n - v;
+	  ray reflection = ray(intersection_pos, reflection_direction, ray::REFLECTION);
+	  Vec3d total_reflection = prod(m.kr(i), traceRay(reflection, thresh, depth+1));
+	  
+	  //transmission 
+	  double index = 1/(m.index(i));
+	  Vec3d total_transmission = Vec3d(0,0,0);
+	 
 	  if(depth%2 == 1){
 	    n = (-1) * n;
 	    index = 1/index;
 	  }
-
 	  float cosi = n * v;
 	  float cost = 1-pow(index, 2.0)*(1-pow(cosi, 2.0));
-	  if(cost < 0)
-	    cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
-	  cost = sqrt(cost);
-	  Vec3d t = (index * cosi - cost) * n - index * v;
-	  ray transmission = ray(position, t, ray::REFRACTION);
-
-	  return m.shade(scene, r, i) + m.ke(i) + m.kr(i)*traceRay(reflection, thresh, depth + 1)+prod(m.kt(i), traceRay(transmission, thresh, depth+1));
-	
-	} else {
-		// No intersection.  This ray travels to infinity, so we color
-		// it according to the background color, which in this (simple) case
-		// is just black.
-
-		return Vec3d( 0.0, 0.0, 0.0 );
+	  if(cost >= 0){
+	    cost = sqrt(cost);
+	    Vec3d t = (index * cosi - cost) * n - index * v;
+	    ray transmission = ray(intersection_pos, t, ray::REFRACTION);
+	    total_transmission = prod(m.kt(i), traceRay(transmission, thresh, depth+1));
+	  }
+	  return m.shade(scene, r, i) + m.ke(i) + total_reflection + total_transmission;
 	}
+	else 
+	  return Vec3d( 0.0, 0.0, 0.0 );
 }
 
 RayTracer::RayTracer()
