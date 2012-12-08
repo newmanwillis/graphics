@@ -2,7 +2,8 @@
 #include "material.h"
 #include "light.h"
 #include "scene.h"
-
+#include <math.h>
+#include <algorithm>
 #include "../fileio/bitmap.h"
 #include "../fileio/pngimage.h"
 
@@ -35,24 +36,30 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
       Light* pLight = *litr;
 
       // Diffuse Light
+      Vec3d l = pLight->getDirection(r.at(i.t));
+      l.normalize();
+      Vec3d n = i.N;
+      n.normalize();
+      Vec3d v = r.at(0.0)-r.at(i.t);
+      v.normalize();
+     
       Vec3d diffuse = prod(kd(i), pLight->getColor(r.at(i.t))) *
-                          max(pLight->getDirection(r.at(i.t)) * i.N, 0.0);
+	max((float)(l*n), (float)0.0);
 
       // Specular Light
-      Vec3d halfAngle = pLight->getDirection(r.at(i.t)) + (r.at(0.0) - r.at(i.t));
+      Vec3d halfAngle = (l + v);
       halfAngle.normalize();
-      float rv = halfAngle * i.N;
-      rv = max(rv, (float)0.0);
+      float hn = halfAngle * n;
+      hn = max(hn, (float)0.0);
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
-                                   max(pow(rv, shininess(i)), 0.0);
+	std::max((float)(pow(hn, (float)shininess(i))), (float)0.0);
 
-     // Placing distance term into Phong model
+      // Placing distance term into Phong model
       result += pLight->distanceAttenuation(r.at(i.t)) * (diffuse + specular);
     }
 
     // Ambient Light
     result += prod(ka(i), scene->ambient());
-    
     return result;
 }
 
