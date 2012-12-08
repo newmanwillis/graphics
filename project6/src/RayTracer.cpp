@@ -72,7 +72,10 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  }
 
 	  float cosi = n * v;
-	  float cost = sqrt(1-pow(index, 2.0)*(1-pow(cosi, 2.0)));
+	  float cost = 1-pow(index, 2.0)*(1-pow(cosi, 2.0));
+	  if(cost < 0)
+	    cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" <<endl;
+	  cost = sqrt(cost);
 	  Vec3d t = (index * cosi - cost) * n - index * v;
 	  ray transmission = ray(position, t, ray::REFRACTION);
 

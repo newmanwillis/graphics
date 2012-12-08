@@ -42,6 +42,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
       Vec3d halfAngle = pLight->getDirection(r.at(i.t)) + (r.at(0.0) - r.at(i.t));
       halfAngle.normalize();
       float rv = halfAngle * i.N;
+      rv = max(rv, (float)0.0);
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
                                    max(pow(rv, shininess(i)), 0.0);
 
