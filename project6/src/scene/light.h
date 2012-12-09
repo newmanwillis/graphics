@@ -3,6 +3,7 @@
 
 #ifndef _WIN32
 #include <algorithm>
+#include "ray.h"
 using std::min;
 using std::max;
 #endif

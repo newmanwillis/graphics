@@ -32,14 +32,14 @@ bool debugMode = false;
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
 Vec3d RayTracer::trace( double x, double y )
 {
-	// Clear out the ray cache in the scene for debugging purposes,
-	scene->intersectCache.clear();
+  // Clear out the ray cache in the scene for debugging purposes,
+  scene->intersectCache.clear();
 
     ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
     scene->getCamera().rayThrough( x,y,r );
-	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
-	ret.clamp();
-	return ret;
+    Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
+    ret.clamp();
+    return ret;
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here

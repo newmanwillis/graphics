@@ -55,7 +55,8 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	std::max((float)(pow(hn, (float)shininess(i))), (float)0.0);
 
       // Placing distance term into Phong model
-      result += pLight->distanceAttenuation(r.at(i.t)) * (diffuse + specular);
+      result += pLight->distanceAttenuation(r.at(i.t)) * prod(pLight->shadowAttenuation(r.at(i.t)), diffuse + specular);
+ 
     }
 
     // Ambient Light

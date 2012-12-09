@@ -1,7 +1,6 @@
 #include <cmath>
-
 #include "light.h"
-
+#include "ray.h"
 
 
 using namespace std;
@@ -15,10 +14,18 @@ double DirectionalLight::distanceAttenuation( const Vec3d& P ) const
 
 Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
 {
-  // YOUR CODE HERE:
-  // You should implement shadow-handling code here.
+  Vec3d shadow_dir = -orientation;
+  shadow_dir.normalize();
+  ray shadow_ray = ray(P, shadow_dir, ray::SHADOW);
+  isect i;
+  Vec3d sa = Vec3d(1, 1, 1);
+  while (scene->intersect( shadow_ray, i )){
+     Material m = i.getMaterial();
+    sa = prod(sa, m.kt(i)); 
+    shadow_ray = ray(shadow_ray.at(i.t), shadow_dir, ray::SHADOW);
 
-  return Vec3d(1,1,1);
+  }
+  return sa;
 
 }
 
@@ -58,9 +65,17 @@ Vec3d PointLight::getDirection( const Vec3d& P ) const
 
 Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 {
-  // YOUR CODE HERE:
-  // You should implement shadow-handling code here.
-
-  return Vec3d(1,1,1);
-
+  Vec3d shadow_dir = position-P;
+  shadow_dir.normalize();
+  ray shadow_ray = ray(P, shadow_dir, ray::SHADOW);
+  isect i;
+  Vec3d sa = Vec3d(1, 1, 1);
+  while (scene->intersect( shadow_ray, i )){
+    if(shadow_ray.at(i.t) == position)
+      break;
+    Material m = i.getMaterial();
+    sa = prod(sa, m.kt(i)); 
+    shadow_ray = ray(shadow_ray.at(i.t), shadow_dir, ray::SHADOW);
+  }
+  return sa;
 }
