@@ -78,12 +78,25 @@ bool Trimesh::intersectLocal(const ray&r, isect&i) const
 // and object material in the isect object
 bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
 {
-    const Vec3d& a = parent->vertices[ids[0]];
+ const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]];
-
-    // YOUR CODE HERE
-
+    
+    Vec3d v1 = (a-c);
+    Vec3d v2 = (a-b);
+    Vec3d n = Vec3d(v1[1]*v2[2] - v1[2]*v2[1], v1[2]*v2[0]-v1[0]*v2[2], v1[0]*v2[1]-v1[1]*v2[0]);
+    n.normalize();
+    float d = -(n*a);
+    Vec3d P = r.getPosition();
+    float t = -((n*P+d)/(n*r.getDirection()));
+    Vec3d intersection = P + t*r.getDirection();
+    
+    //compute baryocentric points
+    Mat3d M = Mat3d(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]);
+    M = M.inverse();
+    Vec3d baryocentric = M*intersection;
+    cout <<"baryocentric: "<<baryocentric<<endl;
+    
     return false;
 }
 

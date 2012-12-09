@@ -51,16 +51,21 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
       halfAngle.normalize();
       float hn = halfAngle * n;
       hn = max(hn, (float)0.0);
+      Vec3d rdiffuse = 2*(l*n)*n-l;
+      float vr = max(v*rdiffuse, 0.0);
+      
+
+      //      Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
+      //	std::max((float)(pow(hn, (float)shininess(i))), (float)0.0);
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
-	std::max((float)(pow(hn, (float)shininess(i))), (float)0.0);
+	pow(vr, (float)shininess(i));
 
       // Placing distance term into Phong model
-      result += pLight->distanceAttenuation(r.at(i.t)) * prod(pLight->shadowAttenuation(r.at(i.t)), diffuse + specular);
+      result += pLight->distanceAttenuation(r.at(i.t)) * /*prod(pLight->shadowAttenuation(r.at(i.t)),*/ (diffuse + specular);
  
     }
-
     // Ambient Light
-    result += prod(ka(i), scene->ambient());
+    result += ke(i) + prod(ka(i), scene->ambient());
     return result;
 }
 

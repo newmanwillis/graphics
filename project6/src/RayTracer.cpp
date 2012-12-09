@@ -50,16 +50,27 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	if (scene->intersect( r, i )) {
 	  const Material& m = i.getMaterial();
 
-	  if (depth == traceUI->getDepth())
-	    return m.shade(scene, r, i)+ m.ke(i);
-	  /*
+	  if (depth == traceUI->getDepth()){
+	    
+	  cout << "depth: "<<depth << endl;
 	  cout << "ke: " << m.ke(i) <<endl;
 	  cout << "kr: " << m.kr(i) <<endl;
 	  cout << "kt: " << m.kt(i) <<endl;
 	  cout << "ks: " << m.ks(i) <<endl;
 	  cout << "kd: " << m.kd(i) <<endl;
 	  cout << "ka: " << m.ka(i) <<endl <<endl;
-	  */
+	
+	    cout << "last shade: " << m.shade(scene, r, i) << endl;
+	    return m.shade(scene, r, i); }
+	  
+	  cout << "depth: "<<depth << endl;
+	  cout << "ke: " << m.ke(i) <<endl;
+	  cout << "kr: " << m.kr(i) <<endl;
+	  cout << "kt: " << m.kt(i) <<endl;
+	  cout << "ks: " << m.ks(i) <<endl;
+	  cout << "kd: " << m.kd(i) <<endl;
+	  cout << "ka: " << m.ka(i) <<endl <<endl;
+	  
 	  Vec3d intersection_pos = r.at(i.t);
 	  Vec3d v = (-1) * r.getDirection();
 	  Vec3d n = i.N;
@@ -70,7 +81,7 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  if(!m.kr(i).iszero()){
 	    Vec3d reflection_direction = 2 * (v * n) * n - v;
 	    ray reflection = ray(intersection_pos, reflection_direction, ray::REFLECTION);
-	    Vec3d total_reflection = prod(m.kr(i), traceRay(reflection, thresh, depth+1));
+	    total_reflection = prod(m.kr(i), traceRay(reflection, thresh, depth+1));
 	  }
 	  //transmission
 	  Vec3d total_transmission = Vec3d(0,0,0);
@@ -92,15 +103,12 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	      total_transmission = prod(m.kt(i), traceRay(transmission, thresh, depth+1));
 	    }
 	  }
-	    /*
-	  else{
-	    Vec3d internal_reflection =  2 * (v * n) * n - v;
-	    ray transmission = ray(intersection_pos, internal_reflection, ray::REFRACTION);
-	    total_transmission = prod(m.kt(i), traceRay(transmission, thresh, depth+1));
-	  }
-	   */
-
-	  return m.shade(scene, r, i) + m.ke(i) +  0*total_reflection + total_transmission;
+	 
+	  cout << "depth: " << depth<< endl;
+	  cout << "currentColor: " << m.shade(scene,r, i)<<endl;
+	  cout << "reflective aspect: " << total_reflection << endl;
+	  cout << "all together: " << m.shade(scene, r, i) +  total_reflection + total_transmission <<endl;
+	  return m.shade(scene, r, i) +  total_reflection + total_transmission;
 	}
 	else 
 	  return Vec3d( 0.0, 0.0, 0.0 );
