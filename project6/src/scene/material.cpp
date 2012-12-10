@@ -37,19 +37,17 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
       // Specular Light
       Vec3d halfAngle = (l + v);
       halfAngle.normalize();
-      float hn = halfAngle * n;
-      hn = max(hn, (float)0.0);
       Vec3d rdiffuse = 2.0 * (l * n) * n - l;
       float vr = max(v * rdiffuse, 0.0);
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
 	                   pow(vr, (float)shininess(i));
 
-      // Placing distance term into Phong model
+      // Contribute distance and shadow attentuation into Phong lighting model
       result += pLight->distanceAttenuation(r.at(i.t)) *
                 prod(pLight->shadowAttenuation(r.at(i.t)), diffuse + specular);
  
     }
-    // Ambient and emissive light
+    // Add Ambient and emissive light
     result += ke(i) + prod(ka(i), scene->ambient());
 
     return result;

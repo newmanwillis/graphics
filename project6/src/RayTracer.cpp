@@ -47,45 +47,41 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	isect i;
 	if (scene->intersect(r, i)) {  // Find intersection
 	  const Material& m = i.getMaterial();
-
-	  if (depth == traceUI->getDepth()) {
+	  
+	  // Ensure the depth has not been reached
+	  if (depth == traceUI->getDepth()) { 
 	    return m.shade(scene, r, i); }
-	  /*
-	  cout << "depth: "<<depth << endl;
-	  cout << "ke: " << m.ke(i) <<endl;
-	  cout << "kr: " << m.kr(i) <<endl;
-	  cout << "kt: " << m.kt(i) <<endl;
-	  cout << "ks: " << m.ks(i) <<endl;
-	  cout << "kd: " << m.kd(i) <<endl;
-	  cout << "ka: " << m.ka(i) <<endl <<endl;
-	  */
+
 	  Vec3d intersection_pos = r.at(i.t);
 	  Vec3d v = (-1.0) * r.getDirection();
 	  Vec3d n = i.N;
 	  n.normalize();
 	  v.normalize();
 
-      // Reflection
+	  // Calculate Reflection
 	  Vec3d total_reflection = Vec3d(0, 0, 0);
-	  if(!m.kr(i).iszero()){
+	  if (!m.kr(i).iszero()) {
 	    Vec3d reflection_direction = 2 * (v * n) * n - v;
 	    ray reflection = ray(intersection_pos, reflection_direction,
                          ray::REFLECTION);
-        // Ray tracing recursion
+	    // Ray tracing reflection recursion
 	    total_reflection = prod(m.kr(i),
                            traceRay(reflection, thresh, depth + 1.0));
 	  }
 
-	  //Transmission
+	  // Calculate Transmission
 	  Vec3d total_transmission = Vec3d(0.0, 0.0, 0.0);
 	 
 	  if (!m.kt(i).iszero()) {
 	    double index = 1.0 / (m.index(i));
 	    
+	    // If the ray is travelling object->air
 	    if (depth % 2 == 1) {
 	      n = (-1.0) * n;
 	      index = 1.0 / index;
 	    }
+	    
+	    // Calculating transmission direction
 	    float cosi = n * v;
 	    float cost = 1.0 - pow(index, 2.0) * (1.0 - pow(cosi, 2.0));
 	    if (cost >= 0.0) {
@@ -93,17 +89,14 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	      Vec3d t = (index * cosi - cost) * n - index * v;
 	      t.normalize();
 	      ray transmission = ray(intersection_pos, t, ray::REFRACTION);
-          // Ray tracing recursion
+	      
+	      // Ray tracing transmission recursion
 	      total_transmission = prod(m.kt(i),
                                traceRay(transmission, thresh, depth + 1.0));
 	    }
 	  }
-	  /*	 
-	  cout << "depth: " << depth<< endl;
-	  cout << "currentColor: " << m.shade(scene,r, i)<<endl;
-	  cout << "reflective aspect: " << total_reflection << endl;
-	  cout << "all together: " << m.shade(scene, r, i) +  total_reflection + total_transmission <<endl;
-	  */
+	  
+	  // Total shade of the intersection point
 	  return m.shade(scene, r, i) + total_reflection + total_transmission;
 	}
 	else 
