@@ -48,7 +48,7 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	if (scene->intersect(r, i)) {  // Find intersection
 	  const Material& m = i.getMaterial();
 
-	  if (depth == traceUI->getDepth()){
+	  if (depth == traceUI->getDepth()) {
 	    return m.shade(scene, r, i); }
 	  /*
 	  cout << "depth: "<<depth << endl;
@@ -66,17 +66,17 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  v.normalize();
 
       // Reflection
-	  Vec3d total_reflection = Vec3d(0.0, 0.0, 0.0);
-
-	  if (!m.kr(i).iszero()) {
-	    Vec3d reflection_direction = 2.0 * (v * n) * n - v;
+	  Vec3d total_reflection = Vec3d(0, 0, 0);
+	  if(!m.kr(i).iszero()){
+	    Vec3d reflection_direction = 2 * (v * n) * n - v;
 	    ray reflection = ray(intersection_pos, reflection_direction,
                          ray::REFLECTION);
+        // Ray tracing recursion
 	    total_reflection = prod(m.kr(i),
                            traceRay(reflection, thresh, depth + 1.0));
 	  }
 
-	  // Transmission
+	  //Transmission
 	  Vec3d total_transmission = Vec3d(0.0, 0.0, 0.0);
 	 
 	  if (!m.kt(i).iszero()) {
@@ -93,9 +93,9 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	      Vec3d t = (index * cosi - cost) * n - index * v;
 	      t.normalize();
 	      ray transmission = ray(intersection_pos, t, ray::REFRACTION);
-          // Recursive ray tracing
+          // Ray tracing recursion
 	      total_transmission = prod(m.kt(i),
-                   traceRay(transmission, thresh, depth + 1.0));
+                               traceRay(transmission, thresh, depth + 1.0));
 	    }
 	  }
 	  /*	 
@@ -104,10 +104,9 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  cout << "reflective aspect: " << total_reflection << endl;
 	  cout << "all together: " << m.shade(scene, r, i) +  total_reflection + total_transmission <<endl;
 	  */
-
-	  return m.shade(scene, r, i) +  total_reflection + total_transmission;
+	  return m.shade(scene, r, i) + total_reflection + total_transmission;
 	}
-	else
+	else 
 	  return Vec3d(0.0, 0.0, 0.0);
 }
 
