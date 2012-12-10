@@ -1,0 +1,586 @@
+SBT-raytracer 1.0
+
+camera {
+	position = (0,0,-4);
+	viewdir = (0,0,1);
+	aspectratio = 1;
+	updir = (0,1,0);
+}
+
+/*
+camera {
+	position = (0,0,-4);
+	viewdir = (0,0,1);
+	aspectratio = 1;
+	updir = (0,1,0);
+}
+*/
+
+directional_light {
+	direction = (0, 0, 1);
+	colour = (0.2, 0.2, 0.2);
+}
+
+
+point_light {
+  position=( 0.0,0.0,-2.0);
+  color=( 1,1,1 );
+  constant_attenuation_coeff= 0.25;
+  linear_attenuation_coeff = 0.003372407;
+  quadratic_attenuation_coeff = 0.000045492;	
+}
+/*
+point_light {
+  position=( 1.0,0.0,-5.0);
+  color=( 1,1,1 );
+  constant_attenuation_coeff= 0.25;
+  linear_attenuation_coeff = 0.003372407;
+  quadratic_attenuation_coeff = 0.000045492;	
+}*/
+
+// LEFT EYE
+translate( 0.6,0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.5,0.5,0.1,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,1.0,0.2);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT EYE
+translate( -0.6,0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.5,0.5,0.1,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,1.0,0.2);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0.0,0.0,0.0 );
+  };
+}
+ )))
+
+// LEFT EYE
+translate( 0.6,0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.3,0.3,0.3,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT EYE
+translate( -0.6,0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.3,0.3,0.3,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0.0,0.0,0.0 );
+  };
+}
+ )))
+
+// RIGHT TOP MOUTH 1
+translate(-1.3,-0.3,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.22,0.22,0.22,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT TOP MOUTH 1
+translate(1.3,-0.3,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.22,0.22,0.22,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 2
+translate(-1.2,-0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 2
+translate(1.2,-0.5,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 3
+translate(-1.10,-0.65,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 3
+translate(1.10,-0.65,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 4
+translate(-1.0,-0.73,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 4
+translate(1.0,-0.73,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 5
+translate(-0.9,-0.8,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 5
+translate(0.9,-0.8,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 6
+translate(-0.75,-0.88,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 6
+translate(0.75,-0.88,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 7
+translate(-0.65,-0.93,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 7
+translate(0.65,-0.93,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 8
+translate(-0.55,-0.97,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 8
+translate(0.55,-0.97,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 9
+translate(-0.45,-1.01,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 9
+translate(0.45,-1.01,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 10
+translate(-0.35,-1.04,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 10
+translate(0.35,-1.04,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 11
+translate(-0.25,-1.06,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 11
+translate(0.25,-1.06,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 12
+translate(-0.15,-1.08,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 12
+translate(0.15,-1.08,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// RIGHT 12
+translate(-0.05,-1.09,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// LEFT 12
+translate(0.05,-1.09,0.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 0.15,0.15,0.15,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.2,0.0,1.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.4,0.4,0.4);
+    emissive=( 0,0,0);
+    shininess=10.074112;
+    transmissive=( 0,0,0 );
+  };
+}
+ )))
+
+// BACKGROUND CIRCLE
+translate(0.0, 0.0, 2.0,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 4.0,4.0, 1.0,
+sphere {
+  name="";
+  material={
+    diffuse=( 0.9,0.1,0.5);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 0.5,0.5,0.5);
+    emissive=( 0.1,0.1,0.1);
+    shininess= 90.0;
+    transmissive=(0.5, 0.5, 0.5);
+  };
+}
+ )))
+
+// BEHIND THE SCENES OBJECT
+translate(2.0,-1.0,-4.1,
+transform( (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1),
+scale( 20.0,20.0,0.1,
+sphere {
+  name="";
+  material={
+    diffuse=( 1.0, 0.5, 0.0);
+    ambient=( 0.2,0.2,0.2);
+    specular=( 1.0,1.0,1.0);
+    emissive=( 0.0,0.0,0.0);
+    shininess= 100.074112;
+    transmissive=( 1.0,1.0,1.0 );
+  };
+}
+ )))
+
+
+
