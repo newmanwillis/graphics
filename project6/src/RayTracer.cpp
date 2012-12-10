@@ -35,22 +35,20 @@ Vec3d RayTracer::trace( double x, double y )
   // Clear out the ray cache in the scene for debugging purposes,
   scene->intersectCache.clear();
 
-    ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
-    scene->getCamera().rayThrough( x,y,r );
-    Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
+    ray r(Vec3d(0.0, 0.0, 0.0), Vec3d(0.0, 0.0, 0.0), ray::VISIBILITY );
+    scene->getCamera().rayThrough(x, y, r);
+    Vec3d ret = traceRay(r, Vec3d(1.0, 1.0, 1.0), 0.0);
     ret.clamp();
     return ret;
 }
 
-// Do recursive ray tracing!  You'll want to insert a lot of code here
-// (or places called from here) to handle reflection, refraction, etc etc.
 Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
 	isect i;
-	if (scene->intersect( r, i )) {
+	if (scene->intersect(r, i)) {  // Find intersection
 	  const Material& m = i.getMaterial();
 
-	  if (depth == traceUI->getDepth()){
+	  if (depth == traceUI->getDepth()) {
 	    return m.shade(scene, r, i); }
 	  /*
 	  cout << "depth: "<<depth << endl;
@@ -62,35 +60,42 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  cout << "ka: " << m.ka(i) <<endl <<endl;
 	  */
 	  Vec3d intersection_pos = r.at(i.t);
-	  Vec3d v = (-1) * r.getDirection();
+	  Vec3d v = (-1.0) * r.getDirection();
 	  Vec3d n = i.N;
 	  n.normalize();
 	  v.normalize();
-	  Vec3d total_reflection = Vec3d(0, 0, 0);
 
+      // Reflection
+	  Vec3d total_reflection = Vec3d(0, 0, 0);
 	  if(!m.kr(i).iszero()){
 	    Vec3d reflection_direction = 2 * (v * n) * n - v;
-	    ray reflection = ray(intersection_pos, reflection_direction, ray::REFLECTION);
-	    total_reflection = prod(m.kr(i), traceRay(reflection, thresh, depth+1));
+	    ray reflection = ray(intersection_pos, reflection_direction,
+                         ray::REFLECTION);
+        // Ray tracing recursion
+	    total_reflection = prod(m.kr(i),
+                           traceRay(reflection, thresh, depth + 1.0));
 	  }
-	  //transmission
-	  Vec3d total_transmission = Vec3d(0,0,0);
+
+	  //Transmission
+	  Vec3d total_transmission = Vec3d(0.0, 0.0, 0.0);
 	 
-	  if(!m.kt(i).iszero()){
-	    double index = 1/(m.index(i));
+	  if (!m.kt(i).iszero()) {
+	    double index = 1.0 / (m.index(i));
 	    
-	    if(depth%2 == 1){
-	      n = (-1) * n;
-	      index = 1/index;
+	    if (depth % 2 == 1) {
+	      n = (-1.0) * n;
+	      index = 1.0 / index;
 	    }
 	    float cosi = n * v;
-	    float cost = 1-pow(index, 2.0)*(1-pow(cosi, 2.0));
-	    if(cost >= 0){
+	    float cost = 1.0 - pow(index, 2.0) * (1.0 - pow(cosi, 2.0));
+	    if (cost >= 0.0) {
 	      cost = sqrt(cost);
 	      Vec3d t = (index * cosi - cost) * n - index * v;
 	      t.normalize();
 	      ray transmission = ray(intersection_pos, t, ray::REFRACTION);
-	      total_transmission = prod(m.kt(i), traceRay(transmission, thresh, depth+1));
+          // Ray tracing recursion
+	      total_transmission = prod(m.kt(i),
+                               traceRay(transmission, thresh, depth + 1.0));
 	    }
 	  }
 	  /*	 
@@ -99,11 +104,10 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 	  cout << "reflective aspect: " << total_reflection << endl;
 	  cout << "all together: " << m.shade(scene, r, i) +  total_reflection + total_transmission <<endl;
 	  */
-
-	  return m.shade(scene, r, i) +  total_reflection + total_transmission;
+	  return m.shade(scene, r, i) + total_reflection + total_transmission;
 	}
 	else 
-	  return Vec3d( 0.0, 0.0, 0.0 );
+	  return Vec3d(0.0, 0.0, 0.0);
 }
 
 RayTracer::RayTracer()

@@ -15,57 +15,43 @@ class Light;
 // the color of that point.
 Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 {
-    // YOUR CODE HERE
- 
-    // For now, this method just returns the diffuse color of the object.
-    // This gives a single matte color for every distinct surface in the
-    // scene, and that's it.  Simple, but enough to get you started.
-    // (It's also inconsistent with the phong model...)
- 
-    // Your mission is to fill in this method with the rest of the phong
-    // shading model, including the contributions of all the light sources.
-    // You will need to call both distanceAttenuation() and shadowAttenuation()
-    // somewhere in your code in order to compute shadows and light falloff.
-    if( debugMode )
+    if (debugMode)
       std::cout << "Debugging Phong code..." << std::endl;
 
-    Vec3d result = Vec3d(0, 0, 0);  // initializer to phong model result
+    Vec3d result = Vec3d(0.0, 0.0, 0.0);  // Initializer to phong model result
     for (vector<Light*>::const_iterator litr = scene->beginLights(); 
 	  litr != scene->endLights(); ++litr ) {
 
-      Light* pLight = *litr;
+      Light* pLight = *litr;  // Point Light
 
       // Diffuse Light
       Vec3d l = pLight->getDirection(r.at(i.t));
       l.normalize();
       Vec3d n = i.N;
       n.normalize();
-      Vec3d v = r.at(0.0)-r.at(i.t);
+      Vec3d v = r.at(0.0) - r.at(i.t);
       v.normalize();
-     
       Vec3d diffuse = prod(kd(i), pLight->getColor(r.at(i.t))) *
-	max((float)(l*n), (float)0.0);
+	                  max((float)(l * n), (float)0.0);
 
       // Specular Light
       Vec3d halfAngle = (l + v);
       halfAngle.normalize();
       float hn = halfAngle * n;
       hn = max(hn, (float)0.0);
-      Vec3d rdiffuse = 2*(l*n)*n-l;
-      float vr = max(v*rdiffuse, 0.0);
-      
-
-      //      Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
-      //	std::max((float)(pow(hn, (float)shininess(i))), (float)0.0);
+      Vec3d rdiffuse = 2.0 * (l * n) * n - l;
+      float vr = max(v * rdiffuse, 0.0);
       Vec3d specular = prod(ks(i), pLight->getColor(r.at(i.t))) *
-	pow(vr, (float)shininess(i));
+	                   pow(vr, (float)shininess(i));
 
       // Placing distance term into Phong model
-      result += pLight->distanceAttenuation(r.at(i.t)) * prod(pLight->shadowAttenuation(r.at(i.t)), diffuse + specular);
+      result += pLight->distanceAttenuation(r.at(i.t)) *
+                prod(pLight->shadowAttenuation(r.at(i.t)), diffuse + specular);
  
     }
-    // Ambient Light
+    // Ambient and emissive light
     result += ke(i) + prod(ka(i), scene->ambient());
+
     return result;
 }
 
